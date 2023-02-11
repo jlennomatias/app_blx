@@ -1,5 +1,4 @@
-from fastapi import APIRouter
-from fastapi import Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from src.infra.sqlalchemy.config.database import get_db
 from src.schemas.schemas import Produtos, ProdutoResponse
@@ -15,11 +14,19 @@ def criar_produtos(produto: Produtos, session: Session = Depends(get_db)):
     produto_Criado = RepositorioProduto(session).criar(produto)
     return produto_Criado
 
-
 @router.get('/produtos', response_model=List[Produtos])
 def listar_produtos(session: Session = Depends(get_db)):
     produtos = RepositorioProduto(session).listar()
     return produtos
+
+@router.get('/produtos/{id_produto}')
+def delete_produtos(id_produto: int, session: Session = Depends(get_db)):
+    produto = RepositorioProduto(session).listar_id(id_produto)
+    if not produto:
+        raise HTTPException(
+            status_code=404, detail=f"Não existe um produto com o id={id_produto}"
+        )
+    return produto
 
 @router.put('/produtos/{id_produto}', response_model=Produtos)
 def atualizar_produtos(id_produto: int, produto: Produtos, session: Session = Depends(get_db)):
