@@ -24,5 +24,6 @@ class RepositorioUsuario():
         usuarios = self.session.execute(statement).one()
         return usuarios
 
-    def remover():
-        pass
+    def obter_telefone(self, telefone) -> Usuario:
+        query = select(Usuario).where(Usuario.telefone == telefone)
+        return self.session.execute(query).scalars().first()

@@ -23,11 +23,19 @@ class Usuarios(BaseModel):
 
 class UsuarioSimples(BaseModel):
     id: Optional[int] = None
-    nome: str
-    telefone: str
+    nome: Optional[str] = None
+    telefone: Optional[str] = None
 
     class Config:
         orm_mode = True
+
+class LoginSucesso(BaseModel):
+    usuario: UsuarioSimples
+    access_token: str
+
+class Login(BaseModel):
+    senha: str
+    telefone: str
 
 class Produtos(BaseModel):
     id: Optional[str] = None
